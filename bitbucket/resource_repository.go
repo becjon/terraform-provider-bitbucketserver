@@ -163,9 +163,9 @@ func resourceRepositoryCreate(d *schema.ResourceData, m interface{}) error {
 	repoSlug := determineSlug(d)
 	name := d.Get("name").(string)
 
-	forkSlug := d.Get("fork_slug").(string)
-	if forkSlug != "" {
-		err := createForkRepository(client, d, project, forkSlug)
+	forkSlug, exists := d.GetOkExists("origin_slug_to_fork")
+	if exists && forkSlug != "" {
+		err := createForkRepository(client, d, project, forkSlug.(string))
 		if err != nil {
 			return err
 		}
